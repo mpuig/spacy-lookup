@@ -37,8 +37,9 @@ class Entity(object):
         spans = []  # keep spans here to merge them later
         for _, start, end in matches:
             entity = doc.char_span(start, end, label=self.label)
-            for token in entity:
-                token._.set(self._is_entity, True)
+            if entity:
+                for token in entity:
+                    token._.set(self._is_entity, True)
             spans.append(entity)
             # Overwrite doc.ents and add entity – be careful not to replace!
             doc.ents = list(doc.ents) + [entity]
