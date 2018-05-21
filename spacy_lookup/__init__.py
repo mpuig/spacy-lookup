@@ -25,12 +25,12 @@ class Entity(object):
             self.keyword_processor.add_keyword_from_file(keywords_file)
         self.label = label
         # Add attributes
-        Doc.set_extension(self._has_entities, getter=self.has_entities)
-        Doc.set_extension(self._entities, getter=self.iter_entities)
-        Span.set_extension(self._has_entities, getter=self.has_entities)
-        Span.set_extension(self._entities, getter=self.iter_entities)
-        Token.set_extension(self._is_entity, default=False)
-        Token.set_extension(self._entity_desc, getter=self.get_entity_desc)
+        Doc.set_extension(self._has_entities, getter=self.has_entities, force=True)
+        Doc.set_extension(self._entities, getter=self.iter_entities, force=True)
+        Span.set_extension(self._has_entities, getter=self.has_entities, force=True)
+        Span.set_extension(self._entities, getter=self.iter_entities, force=True)
+        Token.set_extension(self._is_entity, default=False, force=True)
+        Token.set_extension(self._entity_desc, getter=self.get_entity_desc, force=True)
 
     def __call__(self, doc):
         matches = self.keyword_processor.extract_keywords(doc.text, span_info=True)
