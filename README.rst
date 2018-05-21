@@ -10,7 +10,7 @@ using dictionaries. The extension sets the custom ``Doc``,
 Named Entities are matched using the python module ``flashtext``, and
 looks up in the data provided by different dictionaries.
 
-⏳ Installation
+Installation
 ===============
 
 ``spacy-lookup`` requires ``spacy`` v2.0.0 or higher.
