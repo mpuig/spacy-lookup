@@ -15,7 +15,7 @@ class Entity(object):
 
     name = 'entity'
 
-    def __init__(self, nlp, keywords_list=[], keywords_dict={}, keywords_file=None, label='',
+    def __init__(self, keywords_list=[], keywords_dict={}, keywords_file=None, label='',
                  attrs=('has_entities', 'is_entity', 'entity_desc', 'entities')):
         self._has_entities, self._is_entity, self._entity_desc, self._entities = attrs
         self.keyword_processor = KeywordProcessor()
@@ -37,8 +37,9 @@ class Entity(object):
         spans = []  # keep spans here to merge them later
         for _, start, end in matches:
             entity = doc.char_span(start, end, label=self.label)
-            for token in entity:
-                token._.set(self._is_entity, True)
+            if entity:
+                for token in entity:
+                    token._.set(self._is_entity, True)
             spans.append(entity)
             # Overwrite doc.ents and add entity – be careful not to replace!
             doc.ents = list(doc.ents) + [entity]
