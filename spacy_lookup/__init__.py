@@ -1,18 +1,13 @@
 # coding: utf8
 from __future__ import unicode_literals
 
-import os
-
-from spacy.tokens import Doc, Span, Token
 from flashtext import KeywordProcessor
+from spacy.tokens import Doc, Span, Token
 
 from .about import __version__
 
-data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-
 
 class Entity(object):
-
     name = 'entity'
 
     def __init__(self, keywords_list=[], keywords_dict={}, keywords_file=None, label='',
@@ -77,4 +72,3 @@ class Entity(object):
 
     def get_entity_desc(self, token):
         return token.text
-
