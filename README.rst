@@ -33,13 +33,13 @@ anywhere in your pipeline.
     from spacy_lookup import Entity
 
     nlp = spacy.load('en')
-    entity = Entity(nlp, keywords_list=['python', 'java platform'])
+    entity = Entity(keywords_list=['python', 'product manager', 'java platform'])
     nlp.add_pipe(entity, last=True)
 
     doc = nlp(u"I am a product manager for a java and python.")
     assert doc._.has_entities == True
-    assert doc[2:5]._.has_entities == True
     assert doc[0]._.is_entity == False
+    assert doc[3]._.entity_desc == 'product manager'
     assert doc[3]._.is_entity == True
     print(doc._.entities)
 
