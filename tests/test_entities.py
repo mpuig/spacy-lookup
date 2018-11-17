@@ -20,12 +20,12 @@ def ensure_path(path):
         return path
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture
 def nlp():
     return English()
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture
 def keyword_dict():
     return {
         "java": ["java_2e", "java programing"],
@@ -33,7 +33,7 @@ def keyword_dict():
     }
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture
 def keyword_list():
     return ["java", "python"]
 
@@ -44,8 +44,8 @@ def test_integration(nlp):
     assert nlp.pipe_names[-1] == 'entity'
 
 
-def test_usage_no_entity(nlp):
-    entity = Entity(keywords_list=keyword_list(), label='ACME')
+def test_usage_no_entity(nlp, keyword_list):
+    entity = Entity(keywords_list=keyword_list, label='ACME')
     nlp.add_pipe(entity, last=True)
     doc = nlp(u"This is a sentence without entities.")
     assert not doc._.has_entities
@@ -53,8 +53,8 @@ def test_usage_no_entity(nlp):
         assert not token._.is_entity
 
 
-def test_usage_multiple_entities_from_list(nlp):
-    entity = Entity(keywords_list=keyword_list(), label='ACME')
+def test_usage_multiple_entities_from_list(nlp, keyword_list):
+    entity = Entity(keywords_list=keyword_list, label='ACME')
     nlp.add_pipe(entity, last=True)
     doc = nlp(u"I am a product manager for a java platform and python.")
     assert doc._.has_entities
@@ -62,8 +62,8 @@ def test_usage_multiple_entities_from_list(nlp):
     assert doc[:8]._.has_entities
     assert len(doc[:8]._.entities) == 1
 
-def test_usage_multiple_entities_from_dict(nlp):
-    entity = Entity(keywords_dict=keyword_dict(), label='ACME')
+def test_usage_multiple_entities_from_dict(nlp, keyword_dict):
+    entity = Entity(keywords_dict=keyword_dict, label='ACME')
     nlp.add_pipe(entity, last=True)
     doc = nlp(u"I am a product manager for a java_2e platform and python.")
     assert doc._.has_entities
@@ -74,8 +74,8 @@ def test_usage_multiple_entities_from_dict(nlp):
     assert doc[6]._.entity_desc == 'java_2e'
 
 
-def test_usage_multiple_entities_from_list_and_dict(nlp):
-    entity = Entity(keywords_list=keyword_list(), keywords_dict=keyword_dict(), label='ACME')
+def test_usage_multiple_entities_from_list_and_dict(nlp, keyword_list, keyword_dict):
+    entity = Entity(keywords_list=keyword_list, keywords_dict=keyword_dict, label='ACME')
     nlp.add_pipe(entity, last=True)
     doc = nlp(u"I am a product manager for a java_2e platform and python.")
     assert doc._.has_entities
@@ -88,9 +88,9 @@ def test_usage_multiple_entities_from_list_and_dict(nlp):
 
 
 @pytest.mark.parametrize('file_name', ["keywords.txt"])
-def test_usage_entities_from_file(nlp, file_name):
+def test_usage_entities_from_file(nlp, file_name, keyword_dict):
     keyword_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)
-    entity = Entity(keywords_file=keyword_file, keywords_dict=keyword_dict(), label='ACME')
+    entity = Entity(keywords_file=keyword_file, keywords_dict=keyword_dict, label='ACME')
     nlp.add_pipe(entity, last=True)
     doc = nlp(u"I am a product manager for a java_2e platform and python.")
     assert doc._.has_entities
@@ -101,10 +101,10 @@ def test_usage_entities_from_file(nlp, file_name):
     assert doc[6]._.entity_desc == 'java_2e platform'
 
 
-def test_usage_multiple_components(nlp):
-    entity1 = Entity(keywords_list=keyword_list(), label='ACME_1')
+def test_usage_multiple_components(nlp, keyword_list, keyword_dict):
+    entity1 = Entity(keywords_list=keyword_list, label='ACME_1')
     nlp.add_pipe(entity1, first=False, name='entity1')
-    entity2 = Entity(keywords_dict=keyword_dict(), label='ACME_2')
+    entity2 = Entity(keywords_dict=keyword_dict, label='ACME_2')
     nlp.add_pipe(entity2, first=False, name='entity2')
     doc = nlp(u"I am a product manager for a java_2e platform and python.")
     assert doc._.has_entities

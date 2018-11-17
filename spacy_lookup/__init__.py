@@ -50,9 +50,9 @@ class Entity(object):
             if entity:
                 for token in entity:
                     token._.set(self._is_entity, True)
-            spans.append(entity)
-            # Overwrite doc.ents and add entity – be careful not to replace!
-            doc.ents = list(doc.ents) + [entity]
+                spans.append(entity)
+                # Overwrite doc.ents and add entity – be careful not to replace!
+                doc.ents = list(doc.ents) + [entity]
 
         for span in spans:
             # Iterate over all spans and merge them into one token. This is done

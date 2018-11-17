@@ -2,3 +2,6 @@
 
 # tests
 pytest>=3.2.0
+
+# Package build
+twine==1.12.1

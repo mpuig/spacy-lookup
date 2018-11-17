@@ -13,7 +13,7 @@ looks up in the data provided by different dictionaries.
 Installation
 ===============
 
-``spacy-lookup`` requires ``spacy`` v2.0.0 or higher.
+``spacy-lookup`` requires ``spacy`` v2.0.16 or higher.
 
 .. code:: bash
 
@@ -21,6 +21,11 @@ Installation
 
 Usage
 =====
+First, you need to download a language model.
+
+.. code:: bash
+
+    python -m spacy download en
 
 Import the component and initialise it with the shared ``nlp`` object (i.e. an
 instance of ``Language``), which is used to initialise ``flashtext``

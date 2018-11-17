@@ -32,8 +32,8 @@ def setup_package():
         license=about['__license__'],
         packages=find_packages(),
         install_requires=[
-            'spacy>=2.0.10,<3.0.0',
-            'flashtext>=2.5'],
+            'spacy>=2.0.16,<3.0.0',
+            'flashtext>=2.7'],
         zip_safe=False,
         tests_require=['pytest']
     )
