@@ -10,14 +10,15 @@ from .about import __version__
 class Entity(object):
     name = 'entity'
 
-    def __init__(self, keywords_list=[], keywords_dict={}, keywords_file=None, label='',
+    def __init__(self, keywords_list=[], keywords_dict={}, keywords_file=None,
+                 label='', case_sensitive=False,
                  attrs=('has_entities', 'is_entity', 'entity_desc', 'entities')):
         """Initialise the pipeline component.
         """
         self._has_entities, self._is_entity, self._entity_desc, self._entities = attrs
 
         # Set up the KeywordProcessor
-        self.keyword_processor = KeywordProcessor()
+        self.keyword_processor = KeywordProcessor(case_sensitive=case_sensitive)
         self.keyword_processor.add_keywords_from_list(keywords_list)
         self.keyword_processor.add_keywords_from_dict(keywords_dict)
         if keywords_file:
