@@ -46,7 +46,9 @@ anywhere in your pipeline.
     assert doc[0]._.is_entity == False
     assert doc[3]._.entity_desc == 'product manager'
     assert doc[3]._.is_entity == True
-    print(doc._.entities)
+
+    print([(token.text, token._.canonical) for token in doc if token._.is_entity])
+
 
 ``spacy-lookup`` only cares about the token text, so you can use it on a blank
 ``Language`` instance (it should work for all
