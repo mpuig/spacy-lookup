@@ -11,10 +11,10 @@ class Entity(object):
     name = 'entity'
 
     def __init__(self, keywords_list=[], keywords_dict={}, keywords_file=None, label='',
-                 attrs=('has_entities', 'is_entity', 'entity_desc', 'entities')):
+                 attrs=('has_entities', 'is_entity', 'entity_desc', 'entities', 'canonical')):
         """Initialise the pipeline component.
         """
-        self._has_entities, self._is_entity, self._entity_desc, self._entities = attrs
+        self._has_entities, self._is_entity, self._entity_desc, self._entities, self.canonical = attrs
 
         # Set up the KeywordProcessor
         self.keyword_processor = KeywordProcessor()
@@ -33,6 +33,7 @@ class Entity(object):
         # Register attribute on the Token.
         Token.set_extension(self._is_entity, default=False, force=True)
         Token.set_extension(self._entity_desc, getter=self.get_entity_desc, force=True)
+        Token.set_extension(self.canonical, default=None, force=True)
 
     def __call__(self, doc):
         """Apply the pipeline component on a Doc object and modify it if matches
@@ -41,7 +42,7 @@ class Entity(object):
         """
         matches = self.keyword_processor.extract_keywords(doc.text, span_info=True)
         spans = []  # keep spans here to merge them later
-        for _, start, end in matches:
+        for canonical, start, end in matches:
             # Generate Span representing the entity & set label
             # Using doc.char_span() instead of Span() because the keyword processor returns
             # index values based on character positions, not words
@@ -50,9 +51,11 @@ class Entity(object):
             if entity:
                 for token in entity:
                     token._.set(self._is_entity, True)
+                    token._.set('canonical', canonical)
                 spans.append(entity)
-                # Overwrite doc.ents and add entity – be careful not to replace!
-                doc.ents = list(doc.ents) + [entity]
+
+        # Overwrite doc.ents and add entity – be careful not to replace!
+        doc.ents = list(doc.ents) + spans
 
         for span in spans:
             # Iterate over all spans and merge them into one token. This is done
@@ -66,7 +69,7 @@ class Entity(object):
         return any(token._.get(self._is_entity) for token in tokens)
 
     def iter_entities(self, tokens):
-        return [(t.text, i, t._.get(self._entity_desc))
+        return [(t.text, i, t._.get(self.canonical))
                 for i, t in enumerate(tokens)
                 if t._.get(self._is_entity)]
 

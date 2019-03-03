@@ -72,6 +72,7 @@ def test_usage_multiple_entities_from_dict(nlp, keyword_dict):
     assert doc[3]._.entity_desc == 'product manager'
     assert len(doc[:4]._.entities) == 1
     assert doc[6]._.entity_desc == 'java_2e'
+    assert doc[6]._.canonical == 'java'
 
 
 def test_usage_multiple_entities_from_list_and_dict(nlp, keyword_list, keyword_dict):
