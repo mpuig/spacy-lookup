@@ -42,18 +42,21 @@ class Entity(object):
         in the pipeline, if available.
         """
         matches = self.keyword_processor.extract_keywords(doc.text, span_info=True)
+
+        if len(matches)>0:
+            entities = [ent.text for ent in doc.ents]
+
         spans = []  # keep spans here to merge them later
         for canonical, start, end in matches:
             # Generate Span representing the entity & set label
             # Using doc.char_span() instead of Span() because the keyword processor returns
             # index values based on character positions, not words
             entity = doc.char_span(start, end, label=self.label)
-            # Set custom attribute on each token of the entity
-            if entity:
-                for token in entity:
+            if entity and entity.text not in entities:
+                spans.append(entity)
+                for token in entity:  # set values of token attributes
                     token._.set(self._is_entity, True)
                     token._.set('canonical', canonical)
-                spans.append(entity)
 
         # Overwrite doc.ents and add entity – be careful not to replace!
         doc.ents = list(doc.ents) + spans
